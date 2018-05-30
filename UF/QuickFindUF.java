@@ -11,9 +11,11 @@ public class QuickFindUF{
 
   public void union(int p, int q){
     if(!connected(p, q)){
+      int idP = id[p];
+      int idQ = id[q];
       for(int i = 0; i < id.length; ++i){
-        if(id[i]==id[p])
-          id[i] = q;
+        if(id[i]==idP)
+          id[i] = idQ;
       }
       --count;
     }
@@ -23,6 +25,12 @@ public class QuickFindUF{
 
   public boolean connected(int p, int q){
     return id[p]==id[q];
+  }
+
+  public void printId(){
+    for(int i = 0; i < id.length; ++i){
+      StdOut.println(id[i]);
+    }
   }
 
   public int count(){return count;}
@@ -40,6 +48,7 @@ public class QuickFindUF{
       }
     }
     StdOut.println(quickuf.count() + "components");
+    quickuf.printId();
   }
 
 }
