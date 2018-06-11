@@ -164,7 +164,14 @@ public class Percolation {
   }
 
 
-  public boolean percolate(){} // ^continue point
+  public boolean percolate(){
+    // if n == 1
+    if(n == 1)
+      return isOpen(1, 1);
+    else{
+      return uf.connected(top, tail);
+    }
+  }
 
   public static void main(String[] args){
     // test
@@ -175,11 +182,29 @@ public class Percolation {
     Percolation p5 = new Percolation(3);
 
     assert p3.isOpen(1,1)==false;
+    assert p3.isFull(1,1)==false;
+    assert p3.percolate()==false;
     assert p3.numberOfOpenSites()==0;
     p3.open(1, 1);
-    assert p3.numberOfOpenSites()==1;
     assert p3.isOpen(1,1)==true;
     assert p3.isFull(1,1)==true;
+    assert p3.percolate()==true;
+    assert p3.numberOfOpenSites()==1;
 
+    p4.open(1, 1);
+    assert p4.percolate()==false;
+    p4.open(2, 1);
+    assert p4.percolate()==true;
+
+    p5.open(1, 2);
+    p5.open(2, 2);
+    p5.open(2, 3);
+    assert p5.percolate()==false;
+    assert p5.numberOfOpenSites()==3;
+    assert p5.isFull(2, 2)==true;
+    p5.open(3, 3);
+    assert p5.numberOfOpenSites()==4;
+    assert p5.isFull(2, 2)==true;
+    assert p5.percolate()==true;
   }
 }
