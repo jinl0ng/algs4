@@ -63,41 +63,35 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 
-class Percolation {
+public class Percolation {
 
-  int [] grid;
-  int n;
-  int numsOfOpenSites;
-  WeightedQuickUnionUF uf;
-  int top;
-  int tail;
+  private int [] grid;
+  private int n;
+  private int numsOfOpenSites;
+  private WeightedQuickUnionUF uf;
+  private int top;
 
 
   public Percolation(int N){
-    if (N <= 0) throw new IndexOutOfBoundsException("grid size n should greater than 0");
+    if (N <= 0) throw new IllegalArgumentException("grid size n should greater than 0");
     this.n = N;
     this.numsOfOpenSites = 0;
-    this.grid = new int[N*N + 2];
+    this.grid = new int[N*N + 1];
     this.top = N*N;
-    this.tail = N*N + 1;
-    uf = new WeightedQuickUnionUF(N*N + 2);
+    uf = new WeightedQuickUnionUF(N*N + 1);
 
     // init top
     for(int i = 0; i < N; i++){
       uf.union(i, top);
     }
 
-    // init tail
-    for(int i = (N-1)*N; i < N*N; i++){
-      uf.union(i, tail);
-    }
   }
 
 
   public void open(int row, int col){
     // is row and col legal??
     if(row < 1 || row > n || col < 1 || col > n)
-      throw new IndexOutOfBoundsException("row and col illegal");
+      throw new IllegalArgumentException("row and col illegal");
 
     if(!isOpen(row, col)){
       int indexOfSite = (row-1)*n + (col-1);
@@ -134,7 +128,7 @@ class Percolation {
   public boolean isOpen(int row, int col){
     // is row and col legal??
     if(row < 1 || row > n || col < 1 || col > n)
-      throw new IndexOutOfBoundsException("row and col illegal");
+      throw new IllegalArgumentException("row and col illegal");
 
     int indexOfSite = (row-1)*n + (col-1);
     if(grid[indexOfSite] == 0)
@@ -148,7 +142,7 @@ class Percolation {
 
   public boolean isFull(int row, int col){
     if(row < 1 || row > n || col < 1 || col > n)
-      throw new IndexOutOfBoundsException("row and col illegal");
+      throw new IllegalArgumentException("row and col illegal");
 
     // if site at the first row, isFull depends on the site isOpen
     if(row == 1)
@@ -165,12 +159,16 @@ class Percolation {
   }
 
 
-  public boolean percolate(){
+  public boolean percolates(){
     // if n == 1
     if(n == 1)
       return isOpen(1, 1);
     else{
-      return uf.connected(top, tail);
+      for(int i = 0; i < n; i++){
+        if(uf.connected(n*n-n+i,top))
+          return true;
+      }
+      return false;
     }
   }
 
@@ -184,29 +182,29 @@ class Percolation {
 
     assert p3.isOpen(1,1)==false;
     assert p3.isFull(1,1)==false;
-    assert p3.percolate()==false;
+    assert p3.percolates()==false;
     assert p3.numberOfOpenSites()==0;
     p3.open(1, 1);
     assert p3.isOpen(1,1)==true;
     assert p3.isFull(1,1)==true;
-    assert p3.percolate()==true;
+    assert p3.percolates()==true;
     assert p3.numberOfOpenSites()==1;
 
     p4.open(1, 1);
-    assert p4.percolate()==false;
+    assert p4.percolates()==false;
     p4.open(2, 1);
-    assert p4.percolate()==true;
+    assert p4.percolates()==true;
 
     p5.open(1, 2);
     p5.open(2, 2);
     p5.open(2, 3);
-    assert p5.percolate()==false;
+    assert p5.percolates()==false;
     assert p5.numberOfOpenSites()==3;
     assert p5.isFull(2, 2)==true;
     p5.open(3, 3);
     p5.open(3, 3);
     assert p5.numberOfOpenSites()==4;
     assert p5.isFull(2, 2)==true;
-    assert p5.percolate()==true;
+    assert p5.percolates()==true;
   }
 }
