@@ -98,11 +98,11 @@ public class RandomizedQueue<Item> implements Iterable<Item>{
     }
 
     if(size == data.length){
-      Item [] newData = (Item []) new Object[size*2];
+      Item [] newArr = (Item []) new Object[size*2];
       for(int i = 0; i < size; i++)
-        newData[i] = data[i];
-      newData[size] = item;
-      data = newData;
+        newArr[i] = data[i];
+      newArr[size] = item;
+      data = newArr;
     }else{
       data[size] = item;
     }
@@ -118,6 +118,14 @@ public class RandomizedQueue<Item> implements Iterable<Item>{
     data[randomNum] = data[size-1];
     data[size-1] = null;
     size--;
+
+    if(data.length / 4 >= size){
+      // 数据只占数组的1/4，浪费空间，所以要缩小数组为原来的一半
+      Item [] newArr = (Item [])new Object[data.length/2];
+      for(int i = 0; i < size; i++)
+        newArr[i] = data[i];
+      data = newArr;
+    }
     return randomPick;
   }
 
@@ -130,4 +138,19 @@ public class RandomizedQueue<Item> implements Iterable<Item>{
   }
 
   public Iterator<Item> iterator(){return new RandomizedQueueIterator();}
+
+  public static void main(String [] args){
+    RandomizedQueue<String> rQueue = new RandomizedQueue<String>();
+    rQueue.enqueue("a");
+    rQueue.enqueue("b");
+    StdOut.println(rQueue.dequeue());
+    StdOut.println(rQueue.sample());
+    StdOut.println(rQueue.size());
+    rQueue.enqueue("c");
+    rQueue.enqueue("d");
+    rQueue.enqueue("e");
+    StdOut.println(rQueue.size());
+    for(String str : rQueue)
+      StdOut.println(str);
+  }
 }

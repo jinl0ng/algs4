@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------
  *  Author:        Jinlong Zhu
  *  Written:       2018/06/13
- *  Last updated:  2018/06/13
+ *  Last updated:  2018/06/14
  *
  *  Compilation:   javac Deque.java
  *  Execution:     java Deque
@@ -77,18 +77,16 @@ public class Deque<Item> implements Iterable<Item>{
   }
 
   private class DequeIterator implements Iterator<Item>{
-    private int numberOfNode = size;
+    private Node iteratorPtr = head;
 
-    public boolean hasNext(){return numberOfNode > 0;}
+    public boolean hasNext(){return iteratorPtr != null;}
 
     public Item next(){
       if(!hasNext())
         throw new NoSuchElementException();
 
-      Node iteratorPtr = head;
       Item item = iteratorPtr.item;
       iteratorPtr = iteratorPtr.next;
-      numberOfNode--;
       return item;
     }
 
@@ -170,22 +168,11 @@ public class Deque<Item> implements Iterable<Item>{
 
   public static void main(String [] args){
     Deque<Integer> deque = new Deque<Integer>();
-    assert deque.isEmpty() == true;
-    assert deque.size() == 0;
     deque.addFirst(1);
-    assert deque.isEmpty() == false;
-    assert deque.size() == 1;
-    assert deque.removeFirst() == 1;
-    assert deque.isEmpty() == true;
-    assert deque.size() == 0;
-
     deque.addLast(2);
     deque.addFirst(1);
     deque.addLast(3);
-    assert deque.size() == 3;
-    assert deque.removeFirst() == 1;
-    assert deque.removeLast() == 3;
-    assert deque.removeLast() == 2;
-
+    for(int i : deque)
+      StdOut.println(i);
   }
 }
